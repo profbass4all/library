@@ -7,7 +7,7 @@ import Book from './models/books.mjs'
 import BookRouter from './Routes/index.mjs'
 import rateLimit from 'express-rate-limit';
 import swaggerUI from 'swagger-ui-express'
-import swaggerJson from './apidocs.json'
+import apidocs from './apidocs.json' assert { type: 'json' };
 const app = express()
 const port =  process.env.PORT || 3000
 
@@ -42,7 +42,7 @@ const limiter = rateLimit({
 app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(limiter)
-app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(swaggerJson));
+app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(apidocs));
 app.use('/api/v1', BookRouter)
 
 app.get('/', (req, res) => {
