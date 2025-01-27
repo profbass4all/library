@@ -7,11 +7,14 @@
   },
   "servers": [
     {
-      "url": "https://library-dij0.onrender.com/api/v1/"
+      "url": ""
+    },
+    {
+      "url": "https://library-dij0.onrender.com"
     }
   ],
   "paths": {
-    "/": {
+    "/api/v1/books": {
       "get": {
         "tags": [
           "default"
@@ -465,7 +468,7 @@
         }
       }
     },
-    "/{id}": {
+    "/api/v1/books/{id}": {
       "put": {
         "tags": [
           "default"

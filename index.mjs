@@ -2,12 +2,13 @@ import express from 'express'
 import dotenv from 'dotenv'
 dotenv.config()
 import bodyParser from 'body-parser';
-import { promises as fs } from 'fs';
+import fs from 'fs';
 import { sequelize } from './config/sequelize.mjs';
 import Book from './models/books.mjs'
 import BookRouter from './Routes/index.mjs'
 import rateLimit from 'express-rate-limit';
 import swaggerUI from 'swagger-ui-express'
+import cors from 'cors'
 const app = express()
 const port =  process.env.PORT || 3000
 
@@ -39,18 +40,15 @@ const limiter = rateLimit({
     }
 });
 
-async function loadJson() {
-    const data = await fs.readFile('./apidocs.json', 'utf-8');
-    const parsedData = JSON.parse(data);
-    return parsedData
-}
+const data = fs.readFileSync('./apidocs.json', 'utf-8');
+const apidocs = JSON.parse(data);
 
-const apidocs = loadJson();
 app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(limiter)
-app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(apidocs));
+app.use(cors())
 app.use('/api/v1', BookRouter)
+app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(apidocs));
 
 app.get('/', (req, res) => {
     res.send('Hello, World!...Welcome to my library!');
