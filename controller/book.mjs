@@ -12,7 +12,7 @@ export const createBooks = async(req, res)=>{
             return res.status(400).json(
                 {
                     status: false,
-                    message: error.details[0].message,
+                    message: 'validation error occurred',
                     code: 400,
                 }
             )
@@ -27,11 +27,11 @@ export const createBooks = async(req, res)=>{
             }
         })
         if(checkIfBookAlreadyExists){
-            return res.status(400).json(
+            return res.status(409).json(
                 {
                     status: false,
-                    message: 'Book already exists',
-                    code: 400,
+                    message: 'Conflict!!!...Book already exists',
+                    code: 409,
                 }
             )
         }
@@ -42,7 +42,13 @@ export const createBooks = async(req, res)=>{
             status: true,
             message: 'A new book has been created successfully',
             code: 201,
-            data: book
+            data: {
+                title: book.title,
+                author: book.author,
+                genre: book.genre,
+                is_available: book.is_available,
+                quantity: book.quantity
+            }
         })
     } catch (error) {
         res.status(500).json({
@@ -239,3 +245,4 @@ export const deleteBookById = async (req, res) =>{
         })
     }
 }
+
